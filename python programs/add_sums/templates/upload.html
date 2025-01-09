@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Search Product</title>
+</head>
+<body>
+    <h1>Search Product</h1>
+    <form action="/search" method="post">
+        <label for="product_name">Product Name:</label>
+        <input type="text" name="product_name">
+        <label for="product_type">Product Type:</label>
+        <input type="text" name="product_type">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if data %}
+    <h2>Filtered Data:</h2>
+    <table border="1">
+        <tr>
+            {% for column in data[0].keys() %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in data %}
+        <tr>
+            {% for value in row.values() %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <form id="export-form" method="post" action="/export">
+        <button type="button" onclick="exportData()">Export to Excel</button>
+    </form>
+    {% endif %}
+
+    <script>
+        function exportData() {
+            fetch('/export', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({data: {{ data|tojson|safe }}})
+            }).then(response => response.json())
+              .then(data => alert(data.message));
+        }
+    </script>
+</body>
+</html>

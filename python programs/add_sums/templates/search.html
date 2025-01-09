@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload Product</title>
+</head>
+<body>
+    <h1>Upload Product</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="file">Choose Excel File:</label>
+        <input type="file" name="file" accept=".xls" required>
+        <button type="submit">Load</button>
+    </form>
+
+    {% if data %}
+    <h2>Uploaded Data:</h2>
+    <table border="1">
+        <tr>
+            {% for column in data[0].keys() %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in data %}
+        <tr>
+            {% for value in row.values() %}
+            <td>{{ value }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <form action="/save" method="post">
+        <button type="submit">Save to Database</button>
+    </form>
+    {% endif %}
+</body>
+</html>
